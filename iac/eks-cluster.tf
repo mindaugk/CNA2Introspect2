@@ -1,6 +1,6 @@
 # EKS Cluster in Auto Mode
 resource "aws_eks_cluster" "mk_cluster" {
-  name     = "mk-cluster"
+  name     = var.eks_cluster_name
   role_arn = aws_iam_role.eks_cluster_role.arn
   version  = "1.31"  # Adjust to your desired Kubernetes version
 
@@ -49,7 +49,7 @@ resource "aws_eks_cluster" "mk_cluster" {
   ]
 
   tags = {
-    Name        = "mk-cluster"
+    Name        = var.eks_cluster_name
     Environment = "dev"
     ManagedBy   = "terraform"
     Mode        = "Auto"

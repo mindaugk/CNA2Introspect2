@@ -20,27 +20,6 @@ variable "repo_branch" {
   default     = "main"
 }
 
-variable "eks_cluster_name" {
-  description = "EKS cluster name"
-  type        = string
-}
-
-variable "k8s_namespace" {
-  description = "Kubernetes namespace"
-  type        = string
-  default     = "default"
-}
-
-variable "k8s_deployment_name" {
-  description = "Kubernetes deployment name"
-  type        = string
-}
-
-variable "k8s_container_name" {
-  description = "Kubernetes container name"
-  type        = string
-}
-
 resource "random_id" "artifact_bucket_suffix" {
   byte_length = 4
 }

@@ -1,6 +1,5 @@
-variable "claim_api_base_url" {
-  description = "Base URL for the Kubernetes HTTP service (e.g., http://<nlb-dns>)"
-  type        = string
+locals {
+  claim_api_base_url = "http://${kubernetes_service_v1.claim_status_api.status[0].load_balancer[0].ingress[0].hostname}"
 }
 
 resource "aws_apigatewayv2_api" "claim_status_http_api" {
@@ -19,7 +18,7 @@ resource "aws_apigatewayv2_integration" "claim_status_integration" {
   integration_type       = "HTTP_PROXY"
   integration_method     = "ANY"
   payload_format_version = "1.0"
-  integration_uri        = "${var.claim_api_base_url}/{proxy}"
+  integration_uri        = "${local.claim_api_base_url}/{proxy}"
 }
 
 resource "aws_apigatewayv2_route" "claim_status_proxy" {
