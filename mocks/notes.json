@@ -1,0 +1,42 @@
+[
+  {
+    "claimId": "CLM-1001",
+    "noteId": "NOTE-01",
+    "s3Key": "claims/CLM-1001/note-01.txt",
+    "text": "Initial inspection completed. Minor roof damage due to wind. Photos attached. Awaiting contractor estimate.",
+    "overall-summary": "Initial inspection completed; minor wind-related roof damage with photos, awaiting contractor estimate.",
+    "customer-facing-summary": "We completed the initial inspection and noted minor roof damage. We are waiting on a contractor estimate and will update you soon.",
+    "adjuster-facing-summary": "Inspection done; minor wind damage confirmed with photos. Awaiting contractor estimate to proceed.",
+    "recommended-next-step": "Request and review the contractor estimate, then finalize scope and settlement."
+  },
+  {
+    "claimId": "CLM-1002",
+    "noteId": "NOTE-01",
+    "s3Key": "claims/CLM-1002/note-01.txt",
+    "text": "All documentation received. Coverage confirmed. Approved for reimbursement. Customer notified via email.",
+    "overall-summary": "Documentation complete, coverage confirmed, reimbursement approved, customer notified.",
+    "customer-facing-summary": "Your documents are complete and coverage is confirmed. Reimbursement is approved and you have been notified by email.",
+    "adjuster-facing-summary": "Docs verified; coverage confirmed. Claim approved and customer notified via email.",
+    "recommended-next-step": "Initiate reimbursement payment and close the claim after confirmation."
+  },
+  {
+    "claimId": "CLM-1003",
+    "noteId": "NOTE-01",
+    "s3Key": "claims/CLM-1003/note-01.txt",
+    "text": "Damage predates policy effective date. Claim denied. Formal denial letter generated and mailed.",
+    "overall-summary": "Claim denied because damage predates policy effective date; denial letter sent.",
+    "customer-facing-summary": "We determined the damage occurred before your policy started, so the claim was denied. A formal letter has been mailed to you.",
+    "adjuster-facing-summary": "Loss predates coverage; claim denied. Denial letter generated and mailed.",
+    "recommended-next-step": "Log denial documentation and monitor for any appeal or additional evidence."
+  },
+  {
+    "claimId": "CLM-1004",
+    "noteId": "NOTE-01",
+    "s3Key": "claims/CLM-1004/note-01.txt",
+    "text": "Waiting on repair receipts and police report. Follow-up scheduled for next week.",
+    "overall-summary": "Awaiting repair receipts and police report; follow-up scheduled next week.",
+    "customer-facing-summary": "We are waiting for your repair receipts and police report. We will follow up next week.",
+    "adjuster-facing-summary": "Pending receipts and police report; follow-up set for next week.",
+    "recommended-next-step": "Contact claimant to obtain missing documents and proceed with evaluation."
+  }
+]

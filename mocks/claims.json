@@ -1,0 +1,47 @@
+[
+  {
+    "id": "CLM-1001",
+    "status": "In Review",
+    "policyId": "POL-44321",
+    "claimantName": "Avery Reed",
+    "adjusterId": "ADJ-07",
+    "amount": 1250.50,
+    "updatedAt": "2026-02-10T14:22:00Z"
+  },
+  {
+    "id": "CLM-1002",
+    "status": "Approved",
+    "policyId": "POL-77819",
+    "claimantName": "Jordan Patel",
+    "adjusterId": "ADJ-12",
+    "amount": 3890.00,
+    "updatedAt": "2026-02-09T09:05:00Z"
+  },
+  {
+    "id": "CLM-1003",
+    "status": "Denied",
+    "policyId": "POL-55670",
+    "claimantName": "Morgan Lee",
+    "adjusterId": "ADJ-03",
+    "amount": 640.25,
+    "updatedAt": "2026-02-08T18:31:00Z"
+  },
+  {
+    "id": "CLM-1004",
+    "status": "Pending Documents",
+    "policyId": "POL-22011",
+    "claimantName": "Riley Kim",
+    "adjusterId": "ADJ-19",
+    "amount": 215.75,
+    "updatedAt": "2026-02-07T12:44:00Z"
+  },
+  {
+    "id": "CLM-1005",
+    "status": "In Review",
+    "policyId": "POL-99002",
+    "claimantName": "Casey Ortiz",
+    "adjusterId": "ADJ-04",
+    "amount": 11200.00,
+    "updatedAt": "2026-02-06T16:10:00Z"
+  }
+]

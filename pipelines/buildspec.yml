@@ -1,0 +1,36 @@
+version: 0.2
+
+env:
+  variables:
+    APP_DIR: "src"
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+    commands:
+      - echo Installing kubectl...
+      - curl -sSLo /usr/local/bin/kubectl "https://s3.us-east-1.amazonaws.com/amazon-eks/1.29.0/2024-01-04/bin/linux/amd64/kubectl"
+      - chmod +x /usr/local/bin/kubectl
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region "$AWS_DEFAULT_REGION" | docker login --username AWS --password-stdin "$ECR_REGISTRY"
+      - IMAGE_TAG=${CODEBUILD_RESOLVED_SOURCE_VERSION}
+      - REPO_URI="$ECR_REPOSITORY_URI"
+  build:
+    commands:
+      - echo Building Docker image...
+      - cd "$APP_DIR"
+      - docker build -t "$REPO_URI:$IMAGE_TAG" .
+  post_build:
+    commands:
+      - echo Pushing Docker image...
+      - docker push "$REPO_URI:$IMAGE_TAG"
+      - echo Updating kubeconfig...
+      - aws eks update-kubeconfig --name "$EKS_CLUSTER_NAME" --region "$AWS_DEFAULT_REGION"
+      - echo Deploying to EKS...
+      - kubectl set image deployment/$K8S_DEPLOYMENT_NAME $K8S_CONTAINER_NAME=$REPO_URI:$IMAGE_TAG -n "$K8S_NAMESPACE"
+      - kubectl rollout status deployment/$K8S_DEPLOYMENT_NAME -n "$K8S_NAMESPACE"
+artifacts:
+  files:
+    - '**/*'
