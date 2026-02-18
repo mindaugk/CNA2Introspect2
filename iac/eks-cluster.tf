@@ -104,6 +104,32 @@ resource "aws_eks_access_policy_association" "federated_user_policy" {
   depends_on = [aws_eks_access_entry.federated_user]
 }
 
+# EKS Access Entry for CodeBuild Role
+resource "aws_eks_access_entry" "codebuild_role" {
+  cluster_name  = aws_eks_cluster.mk_cluster.name
+  principal_arn = aws_iam_role.codebuild_role.arn
+  type          = "STANDARD"
+
+  tags = {
+    Name        = "codebuild-role-access"
+    Environment = "dev"
+    ManagedBy   = "terraform"
+  }
+}
+
+# Associate Admin Policy to CodeBuild Role (for kubectl deploys)
+resource "aws_eks_access_policy_association" "codebuild_role_policy" {
+  cluster_name  = aws_eks_cluster.mk_cluster.name
+  principal_arn = aws_iam_role.codebuild_role.arn
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+
+  access_scope {
+    type = "cluster"
+  }
+
+  depends_on = [aws_eks_access_entry.codebuild_role]
+}
+
 # Outputs
 output "eks_cluster_id" {
   description = "ID of the EKS cluster"
