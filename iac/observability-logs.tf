@@ -1,14 +1,3 @@
-resource "aws_cloudwatch_log_group" "eks_container_logs" {
-  name              = var.container_logs_group_name
-  retention_in_days = 7
-
-  tags = {
-    Name        = "eks-container-logs"
-    Environment = "dev"
-    ManagedBy   = "terraform"
-  }
-}
-
 resource "kubernetes_namespace_v1" "amazon_cloudwatch" {
   metadata {
     name = "amazon-cloudwatch"
@@ -75,7 +64,6 @@ resource "helm_release" "aws_for_fluent_bit" {
   version    = "0.1.31"
 
   depends_on = [
-    aws_cloudwatch_log_group.eks_container_logs,
     kubernetes_service_account_v1.aws_for_fluent_bit
   ]
 
@@ -97,11 +85,6 @@ resource "helm_release" "aws_for_fluent_bit" {
   set {
     name  = "cloudWatchLogs.region"
     value = data.aws_region.current.name
-  }
-
-  set {
-    name  = "cloudWatchLogs.logGroupName"
-    value = aws_cloudwatch_log_group.eks_container_logs.name
   }
 
   set {
