@@ -23,6 +23,12 @@ flowchart LR
     Client[Client]
   end
 
+  subgraph CI_CD[CI/CD]
+    GitHub[GitHub Repository]
+    CP[AWS CodePipeline]
+    CB[AWS CodeBuild]
+  end
+
   Client --> APIGW[Amazon API Gateway HTTP API]
 
   subgraph VPC
@@ -33,12 +39,14 @@ flowchart LR
       EKS[Amazon EKS Auto Mode]
       Nodes[EC2 Worker Nodes]
       Svc[Kubernetes Service]
+      Deploy[Claim Status Deployment]
       Pods[Claim Status API Pods]
     end
   end
 
   APIGW --> NLB --> Svc --> Pods
   EKS --> Nodes
+  Deploy --> Pods
   Nodes --> Pods
 
   Pods --> DDB[Amazon DynamoDB claims table]
@@ -46,7 +54,8 @@ flowchart LR
   Pods --> Bedrock[Amazon Bedrock]
   Pods --> CW[Amazon CloudWatch]
 
-  ECR[Amazon ECR] --> Pods
+  GitHub --> CP --> CB --> ECR[Amazon ECR]
+  CB --> Deploy
   ECR --> Inspector[Amazon Inspector]
   Inspector --> SecurityHub[AWS Security Hub]
 ```
@@ -66,7 +75,7 @@ flowchart LR
 
 - Amazon Inspector + Security Hub provide automated image scanning and centralized findings. Compared to ad‑hoc scanning scripts, this standardizes vulnerability management and reporting.
 
-## Deployment
+## Service Deployment
 
 ```mermaid
 flowchart TB
@@ -81,5 +90,44 @@ flowchart TB
   APIGW --> Client[Client]
 ```
 
+## Infrastructure Deployment
+
+Run these commands from the iac/ directory.
+
+### Verify AWS login
+
+```
+aws sts get-caller-identity --profile cna-lab-1
+```
+
+### State cleanup (only if infra was deleted outside Terraform)
+
+```
+terraform state list
+terraform state list | xargs -n1 terraform state rm
+```
+
+Alternative (fast): delete the local state files in iac/ (terraform.tfstate, terraform.tfstate.backup) and the .terraform folder.
+
+Git Bash:
+```
+rm -f terraform.tfstate terraform.tfstate.backup
+rm -rf .terraform
+```
+
+### Fresh init + apply
+
+```
+terraform init -upgrade
+terraform plan
+terraform apply
+```
+
+### Apply changes when already initialized
+
+```
+terraform plan
+terraform apply
+```
 
 
