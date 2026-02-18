@@ -25,7 +25,7 @@ variable "k8s_container_name" {
 variable "enable_security_scanning" {
   description = "Enable Inspector, Security Hub integration, and ECR enhanced scanning"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "container_logs_group_name" {

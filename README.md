@@ -92,7 +92,10 @@ flowchart TB
 
 ## Infrastructure Deployment
 
-Run these commands from the iac/ directory.
+Prerequisite (for security scanning) is to go to AWS Console:
+1. IAM → Users → select your user.
+2. Permissions → Add permissions → Attach policies directly.
+3. Search for AmazonInspector2FullAccess and attach it.
 
 ### Verify AWS login
 
@@ -100,7 +103,11 @@ Run these commands from the iac/ directory.
 aws sts get-caller-identity --profile cna-lab-1
 ```
 
-### State cleanup (only if infra was deleted outside Terraform)
+### Terraform
+
+Run these commands from the iac/ directory.
+
+#### State cleanup (only if infra was deleted outside Terraform)
 
 ```
 terraform state list
@@ -115,7 +122,7 @@ rm -f terraform.tfstate terraform.tfstate.backup
 rm -rf .terraform
 ```
 
-### Fresh init + apply
+#### Fresh init + apply
 
 ```
 terraform init -upgrade
@@ -123,7 +130,7 @@ terraform plan
 terraform apply
 ```
 
-### Apply changes when already initialized
+#### Apply changes when already initialized
 
 ```
 terraform plan
