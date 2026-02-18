@@ -32,6 +32,12 @@ phases:
       - echo Updating kubeconfig...
       - aws eks update-kubeconfig --name "$EKS_CLUSTER_NAME" --region "$AWS_DEFAULT_REGION"
       - echo Deploying to EKS...
+      - echo "EKS_CLUSTER_NAME=$EKS_CLUSTER_NAME"
+      - echo "K8S_NAMESPACE=$K8S_NAMESPACE"
+      - echo "K8S_DEPLOYMENT_NAME=$K8S_DEPLOYMENT_NAME"
+      - echo "K8S_CONTAINER_NAME=$K8S_CONTAINER_NAME"
+      - echo "REPO_URI=$REPO_URI"
+      - echo "IMAGE_TAG=$IMAGE_TAG"
       - kubectl set image deployment/$K8S_DEPLOYMENT_NAME $K8S_CONTAINER_NAME=$REPO_URI:$IMAGE_TAG -n "$K8S_NAMESPACE"
       - kubectl rollout status deployment/$K8S_DEPLOYMENT_NAME -n "$K8S_NAMESPACE"
 artifacts:
