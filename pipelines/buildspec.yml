@@ -19,7 +19,6 @@ phases:
       - REPO_URI="$ECR_REPOSITORY_URI"
   build:
     commands:
-      - set -euxo pipefail
       - echo Building Docker image...
       - pwd
       - ls -la
