@@ -74,6 +74,11 @@ resource "helm_release" "aws_for_fluent_bit" {
   chart      = "aws-for-fluent-bit"
   version    = "0.1.31"
 
+  depends_on = [
+    aws_cloudwatch_log_group.eks_container_logs,
+    kubernetes_service_account_v1.aws_for_fluent_bit
+  ]
+
   set {
     name  = "serviceAccount.create"
     value = "false"

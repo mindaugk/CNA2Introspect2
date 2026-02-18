@@ -70,28 +70,31 @@ public class ClaimStatusApi {
 
         @Override
         public void handle(HttpExchange exchange) throws IOException {
+            long start = System.currentTimeMillis();
             String method = exchange.getRequestMethod();
             String path = exchange.getRequestURI().getPath();
 
             String[] parts = path.split("/");
             if (parts.length == 3 && !parts[2].isBlank() && "GET".equalsIgnoreCase(method)) {
-                handleGetClaim(exchange, parts[2]);
+                handleGetClaim(exchange, parts[2], start);
                 return;
             }
 
             if (parts.length == 4 && "summarize".equalsIgnoreCase(parts[3]) && !parts[2].isBlank()) {
                 if (!"POST".equalsIgnoreCase(method)) {
                     sendJson(exchange, 405, Map.of("message", "Method not allowed"));
+                    logRequest(exchange, 405, start, null);
                     return;
                 }
-                handleSummarize(exchange, parts[2]);
+                handleSummarize(exchange, parts[2], start);
                 return;
             }
 
             sendJson(exchange, 400, Map.of("message", "Invalid path. Use /claims/{id} or /claims/{id}/summarize"));
+            logRequest(exchange, 400, start, null);
         }
 
-        private void handleGetClaim(HttpExchange exchange, String claimId) throws IOException {
+        private void handleGetClaim(HttpExchange exchange, String claimId, long start) throws IOException {
             try {
                 Map<String, AttributeValue> key = Map.of("id", AttributeValue.builder().s(claimId).build());
                 GetItemRequest request = GetItemRequest.builder()
@@ -102,17 +105,20 @@ public class ClaimStatusApi {
 
                 if (response.item() == null || response.item().isEmpty()) {
                     sendJson(exchange, 404, Map.of("message", "Claim not found", "id", claimId));
+                    logRequest(exchange, 404, start, null);
                     return;
                 }
 
                 Map<String, Object> payload = convertItem(response.item());
                 sendJson(exchange, 200, payload);
+                logRequest(exchange, 200, start, null);
             } catch (Exception ex) {
                 sendJson(exchange, 500, Map.of("message", "Server error", "detail", ex.getMessage()));
+                logRequest(exchange, 500, start, ex);
             }
         }
 
-        private void handleSummarize(HttpExchange exchange, String claimId) throws IOException {
+        private void handleSummarize(HttpExchange exchange, String claimId, long start) throws IOException {
             String s3Key = String.format(NOTES_KEY_TEMPLATE, claimId);
             try {
                 ResponseBytes<?> objBytes = s3.getObjectAsBytes(GetObjectRequest.builder()
@@ -143,14 +149,18 @@ public class ClaimStatusApi {
                         RequestBody.fromString(updated, StandardCharsets.UTF_8));
 
                 sendJson(exchange, 200, note);
+                logRequest(exchange, 200, start, null);
             } catch (S3Exception ex) {
                 if (ex.statusCode() == 404) {
                     sendJson(exchange, 404, Map.of("message", "Note not found", "id", claimId, "key", s3Key));
+                    logRequest(exchange, 404, start, ex);
                     return;
                 }
                 sendJson(exchange, 500, Map.of("message", "S3 error", "detail", ex.getMessage()));
+                logRequest(exchange, 500, start, ex);
             } catch (Exception ex) {
                 sendJson(exchange, 500, Map.of("message", "Server error", "detail", ex.getMessage()));
+                logRequest(exchange, 500, start, ex);
             }
         }
 
@@ -214,6 +224,19 @@ public class ClaimStatusApi {
         exchange.sendResponseHeaders(status, bytes.length);
         try (OutputStream os = exchange.getResponseBody()) {
             os.write(bytes);
+        }
+    }
+
+    private static void logRequest(HttpExchange exchange, int status, long start, Exception ex) {
+        long durationMs = System.currentTimeMillis() - start;
+        String method = exchange.getRequestMethod();
+        String path = exchange.getRequestURI().getPath();
+        String query = exchange.getRequestURI().getQuery();
+        String fullPath = (query == null || query.isBlank()) ? path : path + "?" + query;
+        if (ex == null) {
+            System.out.printf("%s %s -> %d (%dms)%n", method, fullPath, status, durationMs);
+        } else {
+            System.out.printf("%s %s -> %d (%dms) error=%s%n", method, fullPath, status, durationMs, ex.getMessage());
         }
     }
 
