@@ -19,10 +19,12 @@ phases:
       - REPO_URI="$ECR_REPOSITORY_URI"
   build:
     commands:
+      - set -euxo pipefail
       - echo Building Docker image...
       - pwd
       - ls -la
-      - docker build -f "$APP_DIR/Dockerfile" -t "$REPO_URI:$IMAGE_TAG" "$APP_DIR"
+      - ls -la "$APP_DIR"
+      - docker build --progress=plain -f "$APP_DIR/Dockerfile" -t "$REPO_URI:$IMAGE_TAG" "$APP_DIR"
   post_build:
     commands:
       - echo Pushing Docker image...
