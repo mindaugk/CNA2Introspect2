@@ -21,3 +21,9 @@ variable "k8s_container_name" {
   type        = string
   default     = "claim-status-api"
 }
+
+variable "enable_security_scanning" {
+  description = "Enable Inspector, Security Hub integration, and ECR enhanced scanning"
+  type        = bool
+  default     = false
+}

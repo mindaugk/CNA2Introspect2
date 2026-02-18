@@ -20,8 +20,9 @@ phases:
   build:
     commands:
       - echo Building Docker image...
-      - cd "$APP_DIR"
-      - docker build -t "$REPO_URI:$IMAGE_TAG" .
+      - pwd
+      - ls -la
+      - docker build -f "$APP_DIR/Dockerfile" -t "$REPO_URI:$IMAGE_TAG" "$APP_DIR"
   post_build:
     commands:
       - echo Pushing Docker image...
