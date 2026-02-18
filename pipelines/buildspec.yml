@@ -11,7 +11,7 @@ phases:
       - echo Installing kubectl...
       - curl -L -sSLo /usr/local/bin/kubectl "https://dl.k8s.io/release/v1.29.0/bin/linux/amd64/kubectl"
       - chmod +x /usr/local/bin/kubectl
-      - /usr/local/bin/kubectl version --client --short
+      - /usr/local/bin/kubectl version --client
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
