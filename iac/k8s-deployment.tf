@@ -45,7 +45,7 @@ resource "kubernetes_deployment_v1" "claim_status_api" {
 
           env {
             name  = "NOTES_BUCKET"
-            value = "claim-notes"
+            value = aws_s3_bucket.claim_notes.bucket
           }
 
           env {
