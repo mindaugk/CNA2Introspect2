@@ -130,4 +130,15 @@ terraform plan
 terraform apply
 ```
 
+## CodePipeline Source Connection Fix (First Run)
+
+If the pipeline fails with “Connection claim-status-github is not available”, authorize the CodeStar connection in the AWS Console:
+
+1. Open AWS Console → Developer Tools → Settings → Connections.
+2. Select claim-status-github.
+3. Click Update pending connection and complete the GitHub authorization.
+4. Re-run the pipeline.
+
+
+
 
