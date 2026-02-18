@@ -27,3 +27,9 @@ variable "enable_security_scanning" {
   type        = bool
   default     = false
 }
+
+variable "container_logs_group_name" {
+  description = "CloudWatch Logs group for EKS container logs"
+  type        = string
+  default     = "/aws/eks/claim-status/container-logs"
+}

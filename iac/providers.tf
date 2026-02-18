@@ -16,6 +16,10 @@ terraform {
       source  = "hashicorp/random"
       version = "~> 3.6"
     }
+    tls = {
+      source  = "hashicorp/tls"
+      version = "~> 4.0"
+    }
   }
 }
 
@@ -65,3 +69,7 @@ provider "helm" {
 data "aws_caller_identity" "current" {}
 
 data "aws_region" "current" {}
+
+data "tls_certificate" "eks" {
+  url = aws_eks_cluster.mk_cluster.identity[0].oidc[0].issuer
+}
